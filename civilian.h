@@ -3,9 +3,13 @@
 
 #include "entity.h"
 
-int civ_init(entity_t* self);
-int civ_act(entity_t* self);
-int civ_react(entity_t* self);
-int civ_die(entity_t* self);
+typedef struct civilian_t {
+	int xpos;
+	int ypos;
+} civilian_t;
+
+civilian_t* civ_init(int x, int y);
+int civ_act(civilian_t* civilian);
+int civ_die(civilian_t* civilian);
 
 #endif

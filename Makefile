@@ -5,7 +5,9 @@ LIBS = -lGL -lglut -lpng -lpthread
 SIMULATION_SRC = simulate.c \
 		visualization.c \
 		block_generator.c \
-		populator.c
+		populator.c \
+		entity.c \
+		civilian.c
 
 SIMULATION_OBJ = $(SIMULATION_SRC:%.c=%.o)
 SIMULATION_EXE = simulate

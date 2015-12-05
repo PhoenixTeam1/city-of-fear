@@ -3,11 +3,12 @@
 
 #include "constants.h"
 #include "entity.h"
+#include "cell.h"
 #include "block_generator.h"
 
 extern int lattice_height;
 extern int lattice_width;
-extern entity_t lattice[][LATTICE_WIDTH];
+extern cell_t lattice[][LATTICE_WIDTH];
 
 void makeSimpleClosedBuildings(void) {
 	int i;

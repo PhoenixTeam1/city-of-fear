@@ -5,6 +5,7 @@
 #include "constants.h"
 #include "civilian.h"
 #include "entity.h"
+#include "cell.h"
 #include "block_generator.h"
 #include "populator.h"
 #include "visualization.h"
@@ -13,7 +14,8 @@
 int running;
 int lattice_height = LATTICE_HEIGHT;
 int lattice_width = LATTICE_WIDTH;
-entity_t lattice[LATTICE_HEIGHT][LATTICE_WIDTH];
+cell_t lattice[LATTICE_HEIGHT][LATTICE_WIDTH];
+entity_t* entity_head;
 
 // Simulation functions
 void initializeLattice(void);
@@ -35,21 +37,19 @@ int main() {
 		usleep(SLEEP_TIME);
 		dumbInteract();
 		//saveLatticeSnapshot("demo", timestep);
-		lattice[0][0].type = zombie;;
 	}
 
+	unpopulateCity();
 	pthread_join(visualizerThread, NULL);
 	return 0;
 }
 
 void dumbInteract(void) {
-	int i;
-	int j;
-	for (i = 0; i < lattice_height; i++) {
-		for (j = 0; j < lattice_width; j++) {
-			//lattice[i][j].act(&lattice[i][j]);
-			//lattice[i][j].react(&lattice[i][j]);
-		}
+	entity_t* cur;
+	cur = entity_head;
+	while (cur != NULL) {
+		cur->act(cur->data);
+		cur = cur->next;
 	}
 	return;
 }

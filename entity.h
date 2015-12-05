@@ -5,17 +5,17 @@ typedef enum entity_type_t {
 	civilian,
 	police,
 	zombie,
-	barrier,
-	open,
 } entity_type_t;
 
 typedef struct entity_t {
 	entity_type_t type;
+	struct entity_t* next;
 	void* data;
-	int (*init)(struct entity_t* self);
-	int (*act)(struct entity_t* self);
-	int (*react)(struct entity_t* self);
-	int (*die)(struct entity_t* self);
+	void* (*init)(int x, int y);
+	int (*act)(void* data);
+	int (*die)(void* data);
 } entity_t;
+
+entity_t* create_entity(entity_type_t type);
 
 #endif

@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "visualization.h"
 #include "entity.h"
+#include "cell.h"
 
 #define VISUALIZATION_SCALAR	2
 #define RGB_SIZE		3
@@ -14,7 +15,7 @@
 extern int lattice_height;
 extern int lattice_width;
 extern int running;
-extern entity_t lattice[][LATTICE_WIDTH];
+extern cell_t lattice[][LATTICE_WIDTH];
 
 typedef struct rgb_t {
 	unsigned char r;
@@ -46,7 +47,7 @@ void createLatticeImage(char* filename) {
 		for (j = 0; j < lattice_width*VISUALIZATION_SCALAR; j++) {
 			rowIndex = ((float)i) / (float)VISUALIZATION_SCALAR;
 			colIndex = (float)j / (float)VISUALIZATION_SCALAR;
-			latticePixel = getColorRepresentation(lattice[(int)rowIndex][(int)colIndex].type);
+			latticePixel = getColorRepresentation(&lattice[(int)rowIndex][(int)colIndex]);
 
 			pixel = &pixels[((lattice_height*VISUALIZATION_SCALAR-i-1)*lattice_width*VISUALIZATION_SCALAR)+j];
 			pixel->red = latticePixel.red;
@@ -138,7 +139,7 @@ void drawLattice(void) {
 	glRasterPos2f(-1, -1);
 	for (i = 0; i < lattice_height; i++) {
 		for (j = 0; j < lattice_width; j++) {
-			color = getColorRepresentation(lattice[i][j].type);
+			color = getColorRepresentation(&lattice[i][j]);
 			visualLattice[3*(i*lattice_width+j)+0] = color.red;
 			visualLattice[3*(i*lattice_width+j)+1] = color.green;
 			visualLattice[3*(i*lattice_width+j)+2] = color.blue;
@@ -179,51 +180,63 @@ void *visualizer(void* args) {
 	return 0;
 }
 
-pixel_t getColorRepresentation(entity_type_t entity_type) {
+pixel_t getColorRepresentation(cell_t* cell) {
 	pixel_t color;
-	switch (entity_type) {
-		case civilian:
-			// Orange
-			color.red = 255;
-			color.green = 76;
-			color.blue = 0;
-			break;
-		case police:
-			// Purple
-			color.red = 84;
-			color.green = 14;
-			color.blue = 173;
-			break;
-		case zombie:
-			// Green
-			color.red = 0;
-			color.green = 174;
-			color.blue = 104;
-			break;
-		case barrier:
-			// Black
-			color.red = 0;
-			color.green = 0;
-			color.blue = 0;
-			break;
-		case open:
-			// Grey
-			color.red = 100;
-			color.green = 100;
-			color.blue = 100;
-			break;
-/*		case ????:
-			// Yellow
-			color.red = 255;
-			color.green = 253;
-			color.blue = 0;
-*/
-		default:
-			// White
-			color.red = 255;
-			color.green = 255;
-			color.blue = 255;
-			break;
+	if (cell->occupant == NULL) {
+		switch (cell->type) {
+			case barrier:
+				// Black
+				color.red = 0;
+				color.green = 0;
+				color.blue = 0;
+				break;
+			case open:
+				// Grey
+				color.red = 100;
+				color.green = 100;
+				color.blue = 100;
+				break;
+/*			case ????:
+				// Yellow
+				color.red = 255;
+				color.green = 253;
+				color.blue = 0;
+*/	
+			default:
+				// White
+				color.red = 255;
+				color.green = 255;
+				color.blue = 255;
+				break;
+		}
+	}
+	else {
+		switch (cell->occupant->type) {
+			case civilian:
+				// Orange
+				color.red = 255;
+				color.green = 76;
+				color.blue = 0;
+				break;
+			case police:
+				// Purple
+				color.red = 84;
+				color.green = 14;
+				color.blue = 173;
+				break;
+			case zombie:
+				// Green
+				color.red = 0;
+				color.green = 174;
+				color.blue = 104;
+				break;
+			default:
+				// White
+				color.red = 255;
+				color.green = 255;
+				color.blue = 255;
+				break;
+		}
 	}
 	return color;
 }

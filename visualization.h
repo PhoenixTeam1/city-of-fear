@@ -2,6 +2,7 @@
 #define VISUALIZATION_H
 #include <stdint.h>
 #include "entity.h"
+#include "cell.h"
 
 typedef struct {
 	uint8_t red;
@@ -10,7 +11,7 @@ typedef struct {
 } pixel_t;
 
 void intHandler();
-pixel_t getColorRepresentation(entity_type_t entity_type);
+pixel_t getColorRepresentation(cell_t* cell);
 void createLatticeImage(char* filename);
 void saveLatticeSnapshot(char* basename, int timestep);
 int savePNG(pixel_t *pixels, const char *path);
