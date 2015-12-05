@@ -3,7 +3,15 @@
 #include "constants.h"
 #include "cell.h"
 
+typedef struct pair_t {
+	int x;
+	int y;
+} pair_t;
+
 extern cell_t lattice[][LATTICE_WIDTH];
+
+pair_t getOffset(direction_t direction);
+int isValidLatticeCell(int x, int y);
 
 void initEntity(entity_t* entity, int x, int y) {
 	entity->xpos = x;
@@ -13,68 +21,74 @@ void initEntity(entity_t* entity, int x, int y) {
 }
 
 int move(entity_t* entity, direction_t direction) {
-	int xoffset;
-	int yoffset;
-	switch (direction) {
-		case north:
-			xoffset = 1;
-			yoffset = 0;
-			break;
-		case northeast:
-			xoffset = 1;
-			yoffset = 1;
-			break;
-		case east:
-			xoffset = 0;
-			yoffset = 1;
-			break;
-		case southeast:
-			xoffset = -1;
-			yoffset = 1;
-			break;
-		case south:
-			xoffset = -1;
-			yoffset = 0;
-			break;
-		case southwest:
-			xoffset = -1;
-			yoffset = -1;
-			break;
-		case west:
-			xoffset = 0;
-			yoffset = -1;
-			break;
-		case northwest:
-			xoffset = 1;
-			yoffset = -1;
-			break;
-		default:
-			xoffset = 0;
-			yoffset = 0;
-	}
+	pair_t offset;
+	offset = getOffset(direction);
+
 
 	// Validity checks
-	if (entity->xpos+xoffset < 0 || entity->xpos+xoffset >= LATTICE_HEIGHT) {
-		xoffset = 0;
-		return 0;
-	}
-	if (entity->ypos+yoffset < 0 || entity->ypos+yoffset >= LATTICE_WIDTH) {
-		yoffset = 0;
+	if (isValidLatticeCell(entity->xpos+offset.x, entity->ypos+offset.y) == 0) {
 		return 0;
 	}
 
 	// Only allow movement to open areas
-	if (lattice[entity->xpos+xoffset][entity->ypos+yoffset].occupant != NULL ||
-		lattice[entity->xpos+xoffset][entity->ypos+yoffset].type != type_open) {
-		xoffset = 0;
-		yoffset = 0;
+	if (lattice[entity->xpos+offset.x][entity->ypos+offset.y].occupant != NULL ||
+		lattice[entity->xpos+offset.x][entity->ypos+offset.y].type != type_open) {
+		offset.x = 0;
+		offset.y = 0;
 		return 0;
 	}
 
 	// Perform move
 	lattice[entity->xpos][entity->ypos].occupant = NULL;
-	entity->xpos = entity->xpos+xoffset;
-	entity->ypos = entity->ypos+yoffset;
+	entity->xpos = entity->xpos+offset.x;
+	entity->ypos = entity->ypos+offset.y;
 	lattice[entity->xpos][entity->ypos].occupant = entity;
 	return 1;
 }
+
+entity_t* getNeighbor(entity_t* entity, direction_t direction) {
+	pair_t offset;
+	entity_t* neighbor;
+	offset = getOffset(direction);
+	if (isValidLatticeCell(entity->xpos+offset.x, entity->ypos+offset.y) == 0) {
+		return NULL;
+	}
+	neighbor = lattice[entity->xpos+offset.x][entity->ypos+offset.y].occupant;
+	return neighbor;
+}
+
+int isValidLatticeCell(int x, int y) {
+	// Validity checks
+	if (x < 0 || x >= LATTICE_HEIGHT) {
+		return 0;
+	}
+	if (y < 0 || y >= LATTICE_WIDTH) {
+		return 0;
+	}
+	return 1;
+}
+
+pair_t getOffset(direction_t direction) {
+	switch (direction) {
+		case north:
+			return (pair_t){1,0};
+		case northeast:
+			return (pair_t){1,1};
+		case east:
+			return (pair_t){0,1};
+		case southeast:
+			return (pair_t){-1,1};
+		case south:
+			return (pair_t){-1,0};
+		case southwest:
+			return (pair_t){-1,-1};
+		case west:
+			return (pair_t){0,-1};
+		case northwest:
+			return (pair_t){1,-1};
+		default:
+			return (pair_t){0,0};
+	}
+	return (pair_t){0,0};
+}
+

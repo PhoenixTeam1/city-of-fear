@@ -35,6 +35,7 @@ int main() {
 
 	saveLatticeSnapshot("demo", timestep);
 
+	// Run simulation
 	while (running) {
 		timestep++;
 		usleep(SLEEP_TIME);

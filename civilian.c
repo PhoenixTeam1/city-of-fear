@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <time.h>
-#include <stdlib.h>
 
 #include "civilian.h"
 #include "entity.h"

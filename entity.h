@@ -14,6 +14,7 @@ typedef enum direction_t {
 } direction_t;
 
 typedef enum entity_type_t {
+	type_none,
 	type_civilian,
 	type_police,
 	type_zombie,
@@ -30,5 +31,6 @@ typedef struct entity_t {
 
 void initEntity(entity_t* entity, int x, int y);
 int move(entity_t* entity, direction_t direction);
+entity_t* getNeighbor(entity_t* entity, direction_t direction);
 
 #endif

@@ -9,7 +9,7 @@
 #include "entity.h"
 #include "cell.h"
 
-#define VISUALIZATION_SCALAR	1
+#define VISUALIZATION_SCALAR	2
 #define RGB_SIZE		3
 
 extern int lattice_height;

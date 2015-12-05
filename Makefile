@@ -7,7 +7,9 @@ SIMULATION_SRC = simulate.c \
 		block_generator.c \
 		populator.c \
 		entity.c \
-		civilian.c
+		civilian.c \
+		police.c \
+		zombie.c
 
 SIMULATION_OBJ = $(SIMULATION_SRC:%.c=%.o)
 SIMULATION_EXE = simulate

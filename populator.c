@@ -6,11 +6,13 @@
 #include "cell.h"
 #include "populator.h"
 #include "civilian.h"
-//#include "police.h"
+#include "police.h"
+#include "zombie.h"
 
 #define OPEN_PROBABILITY	0.800f
-#define CIVILIAN_PROBABILITY	0.199f
-#define POLICE_PROBABILITY	0.001f
+#define CIVILIAN_PROBABILITY	0.1997f
+#define POLICE_PROBABILITY	0.0002f
+#define ZOMBIE_PROBABILITY	0.0001f
 
 extern int lattice_height;
 extern int lattice_width;
@@ -33,8 +35,11 @@ void populateCity(void) {
 				continue;
 			}
 			coin = (double)rand()/(double)RAND_MAX;
-			if (coin <= POLICE_PROBABILITY) {
-				//new_entity = policeCreate(i, j);
+			if (coin <= ZOMBIE_PROBABILITY) {
+				new_entity = zombieCreate(i, j);
+			}
+			else if (coin <= POLICE_PROBABILITY) {
+				new_entity = policeCreate(i, j);
 			}
 			else if (coin <= CIVILIAN_PROBABILITY) {
 				new_entity = civilianCreate(i, j);
