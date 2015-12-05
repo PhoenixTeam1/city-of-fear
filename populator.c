@@ -6,6 +6,7 @@
 #include "cell.h"
 #include "populator.h"
 #include "civilian.h"
+//#include "police.h"
 
 #define OPEN_PROBABILITY	0.800f
 #define CIVILIAN_PROBABILITY	0.199f
@@ -28,16 +29,18 @@ void populateCity(void) {
 	new_entity = NULL;
 	for (i = 0; i < lattice_height; i++) {
 		for (j = 0; j < lattice_width; j++) {
-			if (lattice[i][j].type != open) {
+			if (lattice[i][j].type != type_open) {
 				continue;
 			}
 			coin = (double)rand()/(double)RAND_MAX;
 			if (coin <= POLICE_PROBABILITY) {
-				new_entity = create_entity(police);
+				//new_entity = policeCreate(i, j);
 			}
 			else if (coin <= CIVILIAN_PROBABILITY) {
-				new_entity = create_entity(civilian);
+				new_entity = civilianCreate(i, j);
 			}
+
+			// create linked list of entities
 			if (new_entity) {
 				if (prev_entity) {
 					prev_entity->next = new_entity;
@@ -46,7 +49,6 @@ void populateCity(void) {
 					entity_head = new_entity;
 				}
 				lattice[i][j].occupant = new_entity;
-				lattice[i][j].occupant->data = new_entity->init(i,j);
 				prev_entity = new_entity;
 				new_entity = NULL;
 			}

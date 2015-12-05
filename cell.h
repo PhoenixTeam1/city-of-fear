@@ -4,8 +4,8 @@
 #include "entity.h"
 
 typedef enum cell_type_t {
-	barrier,
-	open,
+	type_barrier,
+	type_open,
 } cell_type_t;
 
 typedef struct cell_t {

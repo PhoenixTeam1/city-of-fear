@@ -9,7 +9,7 @@
 #include "entity.h"
 #include "cell.h"
 
-#define VISUALIZATION_SCALAR	2
+#define VISUALIZATION_SCALAR	1
 #define RGB_SIZE		3
 
 extern int lattice_height;
@@ -184,13 +184,13 @@ pixel_t getColorRepresentation(cell_t* cell) {
 	pixel_t color;
 	if (cell->occupant == NULL) {
 		switch (cell->type) {
-			case barrier:
+			case type_barrier:
 				// Black
 				color.red = 0;
 				color.green = 0;
 				color.blue = 0;
 				break;
-			case open:
+			case type_open:
 				// Grey
 				color.red = 100;
 				color.green = 100;
@@ -212,19 +212,19 @@ pixel_t getColorRepresentation(cell_t* cell) {
 	}
 	else {
 		switch (cell->occupant->type) {
-			case civilian:
+			case type_civilian:
 				// Orange
 				color.red = 255;
 				color.green = 76;
 				color.blue = 0;
 				break;
-			case police:
+			case type_police:
 				// Purple
 				color.red = 84;
 				color.green = 14;
 				color.blue = 173;
 				break;
-			case zombie:
+			case type_zombie:
 				// Green
 				color.red = 0;
 				color.green = 174;

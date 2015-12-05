@@ -4,12 +4,12 @@
 #include "entity.h"
 
 typedef struct civilian_t {
-	int xpos;
-	int ypos;
+	entity_t super;
+	direction_t direction;
 } civilian_t;
 
-civilian_t* civ_init(int x, int y);
-int civ_act(civilian_t* civilian);
-int civ_die(civilian_t* civilian);
+entity_t* civilianCreate(int x, int y);
+int civilianAct(civilian_t* civilian);
+int civilianDie(civilian_t* civilian);
 
 #endif

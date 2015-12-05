@@ -25,7 +25,7 @@ void makeSimpleClosedBuildings(void) {
 		building_height = rand() % 15 + 5;
 		for (i = 0; i < building_height && (i+row_marker) < lattice_height; i++) {
 			for (j = 0; j < lattice_width; j++) {
-				lattice[row_marker+i][j].type = barrier;
+				lattice[row_marker+i][j].type = type_barrier;
 			}
 		}
 		row_marker += road_width;
@@ -34,7 +34,7 @@ void makeSimpleClosedBuildings(void) {
 		building_width = rand() % 5 + 5;
 		for (j = 0; j < building_width && (j+col_marker) < lattice_width; j++) {
 			for (i = 0; i < lattice_width; i++) {
-				lattice[i][col_marker+j].type = open;
+				lattice[i][col_marker+j].type = type_open;
 			}
 		}
 		col_marker += 10 + road_width;

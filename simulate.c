@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "constants.h"
 #include "civilian.h"
@@ -27,6 +29,7 @@ int main() {
 	running = 1;
 	timestep = 0;
 
+	srand(time(NULL));
 	initializeLattice();
 	pthread_create(&visualizerThread, NULL, visualizer, NULL);
 
@@ -48,7 +51,7 @@ void dumbInteract(void) {
 	entity_t* cur;
 	cur = entity_head;
 	while (cur != NULL) {
-		cur->act(cur->data);
+		cur->act(cur);
 		cur = cur->next;
 	}
 	return;
@@ -60,7 +63,7 @@ void initializeLattice(void) {
 	int j;
 	for (i = 0; i < lattice_height; i++) {
 		for (j = 0; j < lattice_width; j++) {
-			lattice[i][j].type = open;
+			lattice[i][j].type = type_open;
 		}
 	}
 
