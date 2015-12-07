@@ -1,6 +1,8 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
+#include "entity_list.h"
+
 typedef enum direction_t {
 	north,
 	northeast,
@@ -22,7 +24,7 @@ typedef enum entity_type_t {
 
 typedef struct entity_t {
 	entity_type_t type;
-	struct entity_t* next;
+	struct list_node_t* listnode;
 	int xpos;
 	int ypos;
 	int (*act)(struct entity_t* self);
@@ -32,5 +34,7 @@ typedef struct entity_t {
 void initEntity(entity_t* entity, int x, int y);
 int move(entity_t* entity, direction_t direction);
 entity_t* getNeighbor(entity_t* entity, direction_t direction);
+void killEntity(entity_t* entity);
+void spawnEntity(entity_t* entity);
 
 #endif

@@ -9,7 +9,8 @@ SIMULATION_SRC = simulate.c \
 		entity.c \
 		civilian.c \
 		police.c \
-		zombie.c
+		zombie.c \
+		entity_list.c
 
 SIMULATION_OBJ = $(SIMULATION_SRC:%.c=%.o)
 SIMULATION_EXE = simulate

@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "civilian.h"
 #include "entity.h"
+#include "entity_list.h"
 #include "cell.h"
 #include "block_generator.h"
 #include "populator.h"
@@ -17,7 +18,7 @@ int running;
 int lattice_height = LATTICE_HEIGHT;
 int lattice_width = LATTICE_WIDTH;
 cell_t lattice[LATTICE_HEIGHT][LATTICE_WIDTH];
-entity_t* entity_head;
+list_t* entity_list;
 
 // Simulation functions
 void initializeLattice(void);
@@ -49,12 +50,7 @@ int main() {
 }
 
 void dumbInteract(void) {
-	entity_t* cur;
-	cur = entity_head;
-	while (cur != NULL) {
-		cur->act(cur);
-		cur = cur->next;
-	}
+	list_act(entity_list);
 	return;
 }
 

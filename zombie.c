@@ -15,16 +15,16 @@ entity_t* zombieCreate(int x, int y) {
 int zombieAct(zombie_t* zombie) {
 	int i;
 	entity_t* neighbor;
+	entity_t* new_zombie;
 	for (i = 0; i < MAX_DIRECTIONS; i++) {
 		neighbor = getNeighbor(&zombie->super, i);
 		if (neighbor == NULL) {
 			continue;
 		}
 		if (neighbor->type == type_civilian) {
-			// XXX quick hack to get things working
-			// need to redo the entity list to do this appropriately
-			neighbor->act = (int (*)(entity_t*))zombieAct;
-			neighbor->type = type_zombie;
+			new_zombie = zombieCreate(neighbor->xpos, neighbor->ypos);
+			killEntity(neighbor);
+			spawnEntity(new_zombie);
 		}
 	}
 	move(&zombie->super, rand() % MAX_DIRECTIONS);

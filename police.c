@@ -14,6 +14,17 @@ entity_t* policeCreate(int x, int y) {
 }
 
 int policeAct(police_t* police) {
+	int i;
+	entity_t* neighbor;
+	for (i = 0; i < MAX_DIRECTIONS; i++) {
+		neighbor = getNeighbor(&police->super, i);
+		if (neighbor == NULL) {
+			continue;
+		}
+		if (neighbor->type == type_zombie) {
+			killEntity(neighbor);
+		}
+	}
 	return 0;
 }
 

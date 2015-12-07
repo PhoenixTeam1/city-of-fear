@@ -1,5 +1,7 @@
 #include <stdlib.h>
+#include <assert.h>
 #include "entity.h"
+#include "entity_list.h"
 #include "constants.h"
 #include "cell.h"
 
@@ -9,6 +11,7 @@ typedef struct pair_t {
 } pair_t;
 
 extern cell_t lattice[][LATTICE_WIDTH];
+extern list_t* entity_list;
 
 pair_t getOffset(direction_t direction);
 int isValidLatticeCell(int x, int y);
@@ -16,7 +19,7 @@ int isValidLatticeCell(int x, int y);
 void initEntity(entity_t* entity, int x, int y) {
 	entity->xpos = x;
 	entity->ypos = y;
-	entity->next = NULL;
+	entity->listnode = NULL;
 	return;
 }
 
@@ -55,6 +58,20 @@ entity_t* getNeighbor(entity_t* entity, direction_t direction) {
 	}
 	neighbor = lattice[entity->xpos+offset.x][entity->ypos+offset.y].occupant;
 	return neighbor;
+}
+
+void killEntity(entity_t* entity) {
+	list_remove(entity_list, entity->listnode);
+	entity->die(entity);
+	lattice[entity->xpos][entity->ypos].occupant = NULL;
+	return;
+}
+void spawnEntity(entity_t* entity) {
+	// no spawning on top of others!
+	assert(lattice[entity->xpos][entity->ypos].occupant == NULL);
+	lattice[entity->xpos][entity->ypos].occupant = entity;
+	list_add(entity_list, entity);
+	return;
 }
 
 int isValidLatticeCell(int x, int y) {
