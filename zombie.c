@@ -5,6 +5,8 @@
 #define FEAST_TIME 10
 #define WAIT_TIME 5
 
+extern int zombie_count;
+
 entity_t* zombieCreate(int x, int y) {
 	zombie_t* zombie;
 	zombie = (zombie_t*)malloc(sizeof(zombie_t));
@@ -15,6 +17,7 @@ entity_t* zombieCreate(int x, int y) {
 	zombie->super.direction = rand() % MAX_DIRECTIONS;
 	zombie->feasting = 0;
 	zombie->hibernating = 0;
+	zombie_count++;
 	return &zombie->super;
 }
 
@@ -67,6 +70,7 @@ int zombieAct(zombie_t* zombie) {
 
 int zombieDie(zombie_t* zombie) {
 	free(zombie);
+	zombie_count--;
 	return 0;
 }
 

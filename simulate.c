@@ -19,7 +19,13 @@ int lattice_height = LATTICE_HEIGHT;
 int lattice_width = LATTICE_WIDTH;
 cell_t lattice[LATTICE_HEIGHT][LATTICE_WIDTH];
 list_t* entity_list;
+int civilian_max;
 int civilian_count;
+int police_max;
+int police_count;
+int zombie_max;
+int zombie_count;
+int dead_count;
 
 
 // Simulation functions
@@ -28,7 +34,6 @@ void dumbInteract(void);
 
 int main() {
 	int timestep;
-	int total;
 	pthread_t visualizerThread;
 	running = 1;
 	timestep = 0;
@@ -38,14 +43,12 @@ int main() {
 	pthread_create(&visualizerThread, NULL, visualizer, NULL);
 
 	saveLatticeSnapshot("demo", timestep);
-	total = civilian_count;
 	// Run simulation
 	while (running) {
 		timestep++;
 		usleep(SLEEP_TIME);
 		dumbInteract();
 		//saveLatticeSnapshot("demo", timestep);
-		printf("Civilians: %d %lf\%\n", civilian_count, (double) civilian_count/(double) total);
 	}
 
 	unpopulateCity();

@@ -5,6 +5,9 @@
 
 #define ACCURACY 0.80
 
+extern int police_count;
+extern int dead_count;
+
 entity_t* policeCreate(int x, int y) {
 	police_t* police;
 	police = (police_t*)malloc(sizeof(police_t));
@@ -13,6 +16,7 @@ entity_t* policeCreate(int x, int y) {
 	police->super.act = (int (*)(entity_t*))policeAct;
 	police->super.die = (int (*)(entity_t*))policeDie;
 	police->super.direction = rand() % MAX_DIRECTIONS;
+	police_count++;
 	return &police->super;
 }
 
@@ -46,6 +50,8 @@ int policeAct(police_t* police) {
 
 int policeDie(police_t* police) {
 	free(police);
+	dead_count++;
+	police_count--;
 	return 0;
 }
 

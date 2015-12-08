@@ -12,10 +12,19 @@
 #define VISUALIZATION_SCALAR	2
 #define RGB_SIZE		3
 
+#define HUD_STR_LEN	32
+
 extern int lattice_height;
 extern int lattice_width;
 extern int running;
 extern cell_t lattice[][LATTICE_WIDTH];
+extern int civilian_count;
+extern int civilian_max;
+extern int police_count;
+extern int police_max;
+extern int dead_count;
+extern int zombie_max;
+extern int zombie_count;
 
 typedef struct rgb_t {
 	unsigned char r;
@@ -24,6 +33,9 @@ typedef struct rgb_t {
 } rgb_t;
 
 unsigned char* visualLattice;
+
+void renderBitmapString(float x, float y, void *font,char *string);
+
 
 void saveLatticeSnapshot(char* basename, int timestep) {
 	char buffer[64];
@@ -136,6 +148,7 @@ void drawLattice(void) {
 	int i;
 	int j;
 	pixel_t color;
+	char countText[HUD_STR_LEN];
 	glRasterPos2f(-1, -1);
 	for (i = 0; i < lattice_height; i++) {
 		for (j = 0; j < lattice_width; j++) {
@@ -147,16 +160,36 @@ void drawLattice(void) {
 	}
 	glPixelZoom(VISUALIZATION_SCALAR, VISUALIZATION_SCALAR);
 	glDrawPixels(lattice_width, lattice_height, GL_RGB, GL_UNSIGNED_BYTE, visualLattice);
+	sprintf(countText, "Civilians: %d / %d (%2.1lf%%)", civilian_count, civilian_max, 100*(double)civilian_count/(double)civilian_max);
+	renderBitmapString(.50, -.80, GLUT_BITMAP_TIMES_ROMAN_24, countText);
+	sprintf(countText, "Police: %d / %d (%2.1lf%%)", police_count, police_max, 100*(double)police_count/(double)police_max);
+	renderBitmapString(.50, -.86, GLUT_BITMAP_TIMES_ROMAN_24, countText);
+	sprintf(countText, "Zombies: %d", zombie_count);
+	renderBitmapString(.50, -.92, GLUT_BITMAP_TIMES_ROMAN_24, countText);
+	sprintf(countText, "Dead: %d / %d (%2.1lf%%)", dead_count, police_max+civilian_max, 100*(double)dead_count/((double)police_max+(double)civilian_max));
+	renderBitmapString(.50, -0.98, GLUT_BITMAP_TIMES_ROMAN_24, countText);
 	glFlush();
 	glutSwapBuffers();
 	glutPostRedisplay();
 	if (!running) glutLeaveMainLoop();
 }
 
+void renderBitmapString(float x, float y, void *font,char *string) {
+	char *c;
+	glRasterPos2f(x, y);
+	for (c=string; *c != '\0'; c++) {
+		glutBitmapCharacter(font, *c);
+	}
+	return;
+}
+
 void *visualizer(void* args) {
 	visualLattice = (unsigned char*)malloc(lattice_height*lattice_width*RGB_SIZE);
 	int argc = 0;
 	char** argv = 0;
+	zombie_max = zombie_count;
+	civilian_max = civilian_count;
+	police_max = police_count;
 
 	// GLUT initialization
 	glutInit(&argc, argv);

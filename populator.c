@@ -20,7 +20,6 @@ extern int lattice_height;
 extern int lattice_width;
 extern cell_t lattice[][LATTICE_WIDTH];
 extern list_t* entity_list;
-extern int civilian_count;
 
 /* Creates entities and populates lattice with them.  Assumes lattice occupants
  * are all null */
@@ -46,7 +45,6 @@ void populateCity(void) {
 			}
 			else if (coin <= CIVILIAN_PROBABILITY) {
 				new_entity = civilianCreate(i, j);
-				civilian_count++;
 			}
 
 			// create linked list of entities
