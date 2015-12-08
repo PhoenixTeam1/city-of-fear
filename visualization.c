@@ -8,8 +8,9 @@
 #include "visualization.h"
 #include "entity.h"
 #include "cell.h"
+#include "simulate.h"
 
-#define VISUALIZATION_SCALAR	2
+#define VISUALIZATION_SCALAR 	1
 #define RGB_SIZE		3
 
 #define HUD_STR_LEN	32
@@ -35,7 +36,19 @@ typedef struct rgb_t {
 unsigned char* visualLattice;
 
 void renderBitmapString(float x, float y, void *font,char *string);
+void clickHandler(int button, int state, int x, int y);
 
+void clickHandler(int button, int state, int x, int y) {
+
+	switch (button) {
+		case GLUT_LEFT_BUTTON:
+        		if (state == GLUT_UP) {
+				dropBomb(lattice_height-(y-1),x);
+			}	
+			break;
+	}
+	return;
+}
 
 void saveLatticeSnapshot(char* basename, int timestep) {
 	char buffer[64];
@@ -208,6 +221,7 @@ void *visualizer(void* args) {
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	signal(SIGINT, intHandler); // have to re-register these handlers since glut overwrote them
 	signal(SIGKILL, intHandler);
+	glutMouseFunc(clickHandler);
 	glutMainLoop();
 	free(visualLattice);
 	return 0;

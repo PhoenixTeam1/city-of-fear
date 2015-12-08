@@ -12,6 +12,7 @@
 #include "block_generator.h"
 #include "populator.h"
 #include "visualization.h"
+#include "simulate.h"
 
 // Globals
 int running;
@@ -26,7 +27,6 @@ int police_count;
 int zombie_max;
 int zombie_count;
 int dead_count;
-
 
 // Simulation functions
 void initializeLattice(void);
@@ -61,6 +61,23 @@ void dumbInteract(void) {
 	return;
 }
 
+void dropBomb(int x, int y) {
+	int i;
+	int j;
+	int radius = 15;
+	for (i = -radius; i <= radius; i++) {
+		for (j = -radius; j <= radius; j++) {
+			if (lattice[x+i][y+j].type == type_barrier) {
+				lattice[x+i][y+j].type = type_open;
+			}
+			if (lattice[x+i][y+j].occupant != NULL) {
+				killEntity(lattice[x+i][y+j].occupant);
+				//lattice[x+i][y+j].type = type_barrier;
+			}
+		}
+	}
+	return;
+}
 
 void initializeLattice(void) {
 	int i;

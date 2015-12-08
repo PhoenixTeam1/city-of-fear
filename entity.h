@@ -32,6 +32,8 @@ typedef struct entity_t {
 	int (*die)(struct entity_t* self);
 } entity_t;
 
+
+
 typedef struct pair_t {
 	int x;
 	int y;
