@@ -87,6 +87,29 @@ int isValidLatticeCell(int x, int y) {
 	return 1;
 }
 
+direction_t opposite(direction_t direction) {
+	switch (direction) {
+		case north:
+			return south;
+		case northeast:
+			return southwest;
+		case east:
+			return west;
+		case southeast:
+			return northwest;
+		case south:
+			return north;
+		case southwest:
+			return northeast;
+		case west:
+			return east;
+		case northwest:
+			return southeast;
+		default:
+			return north;
+	}
+}
+
 pair_t getOffset(direction_t direction) {
 	switch (direction) {
 		case north:
@@ -111,7 +134,6 @@ pair_t getOffset(direction_t direction) {
 	return (pair_t){0,0};
 }
 
-
 int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int fov, int range) {
 	int i;
 	int j;
@@ -123,10 +145,10 @@ int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int
 		for (j = -fov; j <= fov; j++) {
 			cur_row = entity.xpos + offset.x * i + (j * offset.y * (abs(offset.y) - abs(offset.x)));
 			cur_col = entity.ypos + offset.y * i + (j * offset.x);
-			if (!cur_row < lattice_height || cur_row < 0) {
+			if (!(cur_row < lattice_height) || cur_row < 0) {
 				continue;
 			}
-			if (!cur_col < lattice_width || cur_col < 0) {
+			if (!(cur_col < lattice_width) || cur_col < 0) {
 				continue;
 			}
 			if (lattice[cur_row][cur_col].occupant != NULL) {
