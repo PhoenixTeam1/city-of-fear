@@ -2,6 +2,9 @@
 #include "entity.h"
 #include "zombie.h"
 
+#define FEAST_TIME 10
+#define WAIT_TIME 5
+
 entity_t* zombieCreate(int x, int y) {
 	zombie_t* zombie;
 	zombie = (zombie_t*)malloc(sizeof(zombie_t));
@@ -9,30 +12,56 @@ entity_t* zombieCreate(int x, int y) {
 	zombie->super.type = type_zombie;
 	zombie->super.act = (int (*)(entity_t*))zombieAct;
 	zombie->super.die = (int (*)(entity_t*))zombieDie;
-	zombie->direction = rand() % MAX_DIRECTIONS;
+	zombie->super.direction = rand() % MAX_DIRECTIONS;
+	zombie->feasting = 0;
+	zombie->hibernating = 0;
 	return &zombie->super;
 }
 
 int zombieAct(zombie_t* zombie) {
 	entity_t* neighbor;
 	entity_t* new_zombie;
+	double coin;
 
-	if (lookAhead(zombie->super, zombie->direction, type_civilian, 0, 10)) {
-		move(&zombie->super, zombie->direction);
-		move(&zombie->super, zombie->direction);
-		move(&zombie->super, zombie->direction);
+	if (zombie->feasting) {
+		zombie->feasting--; return 0;
+	}
+
+	if (lookAhead(zombie->super, zombie->super.direction, type_civilian, 0, 10, NULL)) {
+		move(&zombie->super, zombie->super.direction);
+		move(&zombie->super, zombie->super.direction);
+		move(&zombie->super, zombie->super.direction);
+	}
+	else if(lookAhead(zombie->super, zombie->super.direction, type_police, 0, 10, NULL)) {
+		move(&zombie->super, zombie->super.direction);
+		move(&zombie->super, zombie->super.direction);
+		move(&zombie->super, zombie->super.direction);
 	}
 	else {
-		zombie->direction = rand() % MAX_DIRECTIONS;
+		coin = (double)rand() / (double)RAND_MAX;
+		if (coin < 0.25) {
+			zombie->super.direction = rand() % MAX_DIRECTIONS;
+		}
 	}
-	neighbor = getNeighbor(&zombie->super, zombie->direction);
-	if (neighbor != NULL && neighbor->type == type_civilian) {
+	neighbor = getNeighbor(&zombie->super, zombie->super.direction);
+	if (neighbor != NULL && (neighbor->type == type_civilian || neighbor->type == type_police)) {
+		zombie->feasting = FEAST_TIME;
 		new_zombie = zombieCreate(neighbor->xpos, neighbor->ypos);
 		killEntity(neighbor);
 		spawnEntity(new_zombie);
+		((zombie_t *)new_zombie)->feasting = FEAST_TIME;
+	}
+	if (lookAround(zombie->super, type_civilian, 4, NULL)) {
+		move(&zombie->super, zombie->super.direction);
+	}
+	else {
+		if (zombie->hibernating == 0) {
+			move(&zombie->super, zombie->super.direction);
+			zombie->hibernating = WAIT_TIME;
+		}
+		zombie->hibernating--;
 	}
 
-	move(&zombie->super, rand() % MAX_DIRECTIONS);
 	return 0;
 }
 

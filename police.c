@@ -3,6 +3,8 @@
 #include "police.h"
 #include "entity.h"
 
+#define ACCURACY 0.80
+
 entity_t* policeCreate(int x, int y) {
 	police_t* police;
 	police = (police_t*)malloc(sizeof(police_t));
@@ -10,21 +12,35 @@ entity_t* policeCreate(int x, int y) {
 	police->super.type = type_police;
 	police->super.act = (int (*)(entity_t*))policeAct;
 	police->super.die = (int (*)(entity_t*))policeDie;
+	police->super.direction = rand() % MAX_DIRECTIONS;
 	return &police->super;
 }
 
 int policeAct(police_t* police) {
-	int i;
-	entity_t* neighbor;
-	for (i = 0; i < MAX_DIRECTIONS; i++) {
-		neighbor = getNeighbor(&police->super, i);
-		if (neighbor == NULL) {
-			continue;
+	entity_t* zombie;
+	entity_t* civilian;
+	double coin;
+	coin = (double)rand() / (double)RAND_MAX;
+
+	if (lookAhead(police->super, police->super.direction, type_zombie, 5, 5, &zombie)) {
+		if (coin <= ACCURACY) {
+			killEntity(zombie);
 		}
-		if (neighbor->type == type_zombie) {
-			killEntity(neighbor);
+		else {
+			if (lookAround(*zombie, type_civilian, 2, &civilian)) {
+				killEntity(civilian);
+			}
 		}
+		move(&police->super, police->super.direction);
 	}
+	else {
+		if (coin <= 0.25) {
+			police->super.direction = rand() % MAX_DIRECTIONS;
+		}
+		move(&police->super, police->super.direction);
+		
+	}
+
 	return 0;
 }
 

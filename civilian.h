@@ -5,7 +5,6 @@
 
 typedef struct civilian_t {
 	entity_t super;
-	direction_t direction;
 } civilian_t;
 
 entity_t* civilianCreate(int x, int y);

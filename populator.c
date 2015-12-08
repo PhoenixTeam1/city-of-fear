@@ -11,15 +11,16 @@
 #include "police.h"
 #include "zombie.h"
 
-#define OPEN_PROBABILITY	0.800f
-#define CIVILIAN_PROBABILITY	0.1997f
-#define POLICE_PROBABILITY	0.0002f
+#define OPEN_PROBABILITY	0.9573f
+#define CIVILIAN_PROBABILITY	0.0400f
+#define POLICE_PROBABILITY	0.0026f
 #define ZOMBIE_PROBABILITY	0.0001f
 
 extern int lattice_height;
 extern int lattice_width;
 extern cell_t lattice[][LATTICE_WIDTH];
 extern list_t* entity_list;
+extern int civilian_count;
 
 /* Creates entities and populates lattice with them.  Assumes lattice occupants
  * are all null */
@@ -45,6 +46,7 @@ void populateCity(void) {
 			}
 			else if (coin <= CIVILIAN_PROBABILITY) {
 				new_entity = civilianCreate(i, j);
+				civilian_count++;
 			}
 
 			// create linked list of entities

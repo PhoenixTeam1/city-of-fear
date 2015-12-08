@@ -5,11 +5,6 @@
 #include "constants.h"
 #include "cell.h"
 
-typedef struct pair_t {
-	int x;
-	int y;
-} pair_t;
-
 extern int lattice_height;
 extern int lattice_width;
 extern cell_t lattice[][LATTICE_WIDTH];
@@ -134,7 +129,31 @@ pair_t getOffset(direction_t direction) {
 	return (pair_t){0,0};
 }
 
-int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int fov, int range) {
+int lookAround(entity_t entity, entity_type_t lookFor, int radius, entity_t** ret) {
+	pair_t start;
+	pair_t end;
+	int i;
+	int j;
+	start.x = entity.xpos + radius;
+	start.y = entity.ypos - radius;
+	end.x = entity.xpos - radius;
+	end.y = entity.ypos + radius;
+	for (i = start.x; i <= end.x; i++) {
+		for (j = start.y; j <= end.y; j++) {
+			if (lattice[i][j].occupant != NULL) {
+				if (lattice[i][j].occupant->type == lookFor) {
+					if (ret != NULL) {
+						*ret = lattice[i][j].occupant;
+					}
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int fov, int range, entity_t** ret) {
 	int i;
 	int j;
 	int cur_row;
@@ -153,6 +172,9 @@ int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int
 			}
 			if (lattice[cur_row][cur_col].occupant != NULL) {
 				if (lattice[cur_row][cur_col].occupant->type == lookFor) {
+					if(ret != NULL) {
+						*ret = lattice[cur_row][cur_col].occupant;
+					}
 					return 1;
 				}
 			}
