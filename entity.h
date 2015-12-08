@@ -36,5 +36,6 @@ int move(entity_t* entity, direction_t direction);
 entity_t* getNeighbor(entity_t* entity, direction_t direction);
 void killEntity(entity_t* entity);
 void spawnEntity(entity_t* entity);
+int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int fov, int range);
 
 #endif

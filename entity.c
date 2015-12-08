@@ -10,6 +10,8 @@ typedef struct pair_t {
 	int y;
 } pair_t;
 
+extern int lattice_height;
+extern int lattice_width;
 extern cell_t lattice[][LATTICE_WIDTH];
 extern list_t* entity_list;
 
@@ -109,3 +111,30 @@ pair_t getOffset(direction_t direction) {
 	return (pair_t){0,0};
 }
 
+
+int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int fov, int range) {
+	int i;
+	int j;
+	int cur_row;
+	int cur_col;
+	pair_t offset;
+	offset = getOffset(direction);
+	for (i = 1; i < range + 1; i++) {
+		for (j = -fov; j <= fov; j++) {
+			cur_row = entity.xpos + offset.x * i + (j * offset.y * (abs(offset.y) - abs(offset.x)));
+			cur_col = entity.ypos + offset.y * i + (j * offset.x);
+			if (!cur_row < lattice_height || cur_row < 0) {
+				continue;
+			}
+			if (!cur_col < lattice_width || cur_col < 0) {
+				continue;
+			}
+			if (lattice[cur_row][cur_col].occupant != NULL) {
+				if (lattice[cur_row][cur_col].occupant->type == lookFor) {
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
