@@ -5,6 +5,7 @@
 
 typedef struct zombie_t {
 	entity_t super;
+	direction_t direction;
 	// zombie-specific members here
 } zombie_t;
 

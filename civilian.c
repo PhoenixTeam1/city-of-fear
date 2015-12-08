@@ -16,8 +16,9 @@ entity_t* civilianCreate(int x, int y) {
 }
 
 int civilianAct(civilian_t* civilian) {
-	if (lookAhead(civilian->super, civilian->direction, type_zombie, 1, 3)) {
+	if (lookAhead(civilian->super, civilian->direction, type_zombie, 1, 5)) {
 		civilian->direction = opposite(civilian->direction);
+		move(&civilian->super, civilian->direction);
 	}
 	if (move(&civilian->super, civilian->direction) == 0) {
 		civilian->direction = rand() % MAX_DIRECTIONS;
