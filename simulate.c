@@ -1,3 +1,4 @@
+#include <sys/time.h>
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
@@ -31,9 +32,12 @@ int dead_count;
 // Simulation functions
 void initializeLattice(void);
 void dumbInteract(void);
+double when();
 
 int main() {
 	int timestep;
+	double timer;
+	double total;
 	pthread_t visualizerThread;
 	running = 1;
 	timestep = 0;
@@ -44,22 +48,39 @@ int main() {
 
 	saveLatticeSnapshot("demo", timestep);
 	// Run simulation
-	while (running) {
+	total = 0;
+	while (running && ((((double)civilian_count / (double)civilian_max) > 0.01) && zombie_count > 0)) {
+		timer = when();
 		timestep++;
 		usleep(SLEEP_TIME);
 		dumbInteract();
 		//saveLatticeSnapshot("demo", timestep);
+		total += when() - timer;
 	}
-
+	printf("Avg. Time: %lf\n", total/(double)timestep);
+	running = 0;
+	if(zombie_count > 0) {
+		printf("Zombies Win!!!\n");
+	}
+	else {
+		printf("Humans wind!!!\n");
+	}
 	unpopulateCity();
 	pthread_join(visualizerThread, NULL);
 	return 0;
+}
+
+double when() {
+        struct timeval tp;
+        gettimeofday(&tp, NULL);
+        return ((double) tp.tv_sec + (double) tp.tv_usec * 1e-6);
 }
 
 void dumbInteract(void) {
 	int i;
 	int j;
 	entity_t* entity;
+	#pragma omp parallel for default(shared) private(i, j, entity) firstprivate(lattice_height, lattice_width)
 	for (i = 0; i < lattice_height; i++) {
 		for (j = 0; j < lattice_width; j++) {
 			if (lattice[i][j].occupant == NULL) continue;

@@ -1,5 +1,5 @@
 CC = gcc
-CCFLAGS = -Wall -O3 -g
+CCFLAGS = -Wall -O3 -g #-fopenmp
 LIBS = -lGL -lglut -lpng -lpthread
 
 SIMULATION_SRC = simulate.c \
