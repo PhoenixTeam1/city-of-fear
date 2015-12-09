@@ -24,6 +24,7 @@ entity_t* zombieCreate(int x, int y) {
 int zombieAct(zombie_t* zombie) {
 	entity_t* neighbor;
 	entity_t* new_zombie;
+	entity_t* noise;
 	double coin;
 
 	if (zombie->feasting) {
@@ -54,7 +55,8 @@ int zombieAct(zombie_t* zombie) {
 		spawnEntity(new_zombie);
 		((zombie_t *)new_zombie)->feasting = FEAST_TIME;
 	}
-	if (lookAround(zombie->super, type_civilian, 4, NULL)) {
+	if (lookAround(zombie->super, type_civilian, 4, &noise)) {
+		zombie->super.direction = getDirection(zombie->super, *noise);
 		move(&zombie->super, zombie->super.direction);
 	}
 	else {

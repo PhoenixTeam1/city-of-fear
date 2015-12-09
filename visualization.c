@@ -10,7 +10,7 @@
 #include "cell.h"
 #include "simulate.h"
 
-#define VISUALIZATION_SCALAR 	1
+#define VISUALIZATION_SCALAR 	2
 #define RGB_SIZE		3
 
 #define HUD_STR_LEN	32
