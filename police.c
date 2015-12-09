@@ -39,7 +39,6 @@ int policeAct(police_t* police) {
 				killEntity(civilian);
 			}
 		}
-		move(&police->super, police->super.direction);
 	}
 	else if (lookAround(police->super, type_zombie, 8, &zombie)) {
 		police->super.direction = getDirection(police->super, *zombie);

@@ -31,7 +31,7 @@ int civilianAct(civilian_t* civilian) {
 		}
 	}
 	else {
-		civilian->fear -= 0.01;
+		civilian->fear -= 0.005;
 		if (civilian->fear < 0) civilian->fear = 0;
 	}
 	if (lookAhead(civilian->super, civilian->super.direction, type_zombie, 1, 5, NULL)) {
