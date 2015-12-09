@@ -202,7 +202,7 @@ int lookAround(entity_t entity, entity_type_t lookFor, int radius, entity_t** re
 					if (!lineOfSight(entity, *lattice[i][j].occupant)) continue;
 					dist = getDistance(entity, *lattice[i][j].occupant);
 					if (ret != NULL && dist < best_dist) {
-						found = 1;
+						found++;
 						best_dist = dist;
 						*ret = lattice[i][j].occupant;
 					}

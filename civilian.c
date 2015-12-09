@@ -22,32 +22,40 @@ entity_t* civilianCreate(int x, int y) {
 
 int civilianAct(civilian_t* civilian) {
 	entity_t* police;
+	entity_t* zombie;
 	double coin;
+	int num_zombies;
+
 	coin = (double) rand() / RAND_MAX;
-	if (lookAround(civilian->super, type_zombie, 8, NULL)) {
-		civilian->fear += 0.1;
-		if (civilian->fear > 0.8) {
-			civilian->fear = 0.8;
-		}
+
+	num_zombies = lookAround(civilian->super, type_zombie, 8, &zombie);
+	// Zombies cause fear
+	if (num_zombies) {
+		civilian->fear += 0.025 * (double) num_zombies;
 	}
-	else {
+	// Police calm us
+	if (lookAround(civilian->super, type_police, 8, &police)) { 
 		civilian->fear -= 0.005;
 		if (civilian->fear < 0) civilian->fear = 0;
 	}
-	if (lookAhead(civilian->super, civilian->super.direction, type_zombie, 1, 5, NULL)) {
-		civilian->super.direction = opposite(civilian->super.direction);
-		move(&civilian->super, civilian->super.direction);
+	// Move
+	
+	if (coin <= civilian->fear) {
+		civilian->super.direction = getDirection(civilian->super, *police);
 	}
-	if (lookAround(civilian->super, type_police, 5, &police)) {
-		if (coin <= civilian->fear) {
-			civilian->super.direction = getDirection(civilian->super, *police);
-		}
+	else if (num_zombies) {
+		civilian->super.direction = opposite(getDirection(civilian->super, *zombie));
 	}
 	if (move(&civilian->super, civilian->super.direction) == 0) {
 		if (coin <= 0.5) {
 			civilian->super.direction = rand() % MAX_DIRECTIONS;
 		}
 	}
+	if (civilian->fear > 0.8) { // PANIC!!!
+		civilian->fear = 0.8;
+		move(&civilian->super, civilian->super.direction);
+	}
+	
 	return 0;
 }
 
