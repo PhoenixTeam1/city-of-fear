@@ -129,17 +129,40 @@ pair_t getOffset(direction_t direction) {
 	return (pair_t){0,0};
 }
 
+direction_t getDirection(entity_t from, entity_t to) {
+	int x;
+	int y;
+	x = to.xpos - from.xpos;
+	y = to.ypos - from.ypos;
+	if (x > 0) {
+		if (y > 0) return northeast;
+		else if (y < 0) return northwest;
+		else return north;
+	}
+	else if (x < 0) {
+		if (y > 0) return southeast;
+		else if (y < 0) return southwest;
+		else return south;
+	}
+	else {
+		if (y > 0) return east;
+		else if (y < 0) return west;
+		else return north;
+	}
+}
+
 int lookAround(entity_t entity, entity_type_t lookFor, int radius, entity_t** ret) {
 	pair_t start;
 	pair_t end;
 	int i;
 	int j;
-	start.x = entity.xpos + radius;
-	start.y = entity.ypos - radius;
-	end.x = entity.xpos - radius;
+	start.x = entity.xpos - radius;
+	start.y = entity.ypos -  radius;
+	end.x = entity.xpos + radius;
 	end.y = entity.ypos + radius;
 	for (i = start.x; i <= end.x; i++) {
 		for (j = start.y; j <= end.y; j++) {
+			if (!isValidLatticeCell(i, j)) continue;
 			if (lattice[i][j].occupant != NULL) {
 				if (lattice[i][j].occupant->type == lookFor) {
 					if (ret != NULL) {
@@ -164,12 +187,7 @@ int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int
 		for (j = -fov; j <= fov; j++) {
 			cur_row = entity.xpos + offset.x * i + (j * offset.y * (abs(offset.y) - abs(offset.x)));
 			cur_col = entity.ypos + offset.y * i + (j * offset.x);
-			if (!(cur_row < lattice_height) || cur_row < 0) {
-				continue;
-			}
-			if (!(cur_col < lattice_width) || cur_col < 0) {
-				continue;
-			}
+			if (!isValidLatticeCell(cur_row, cur_col)) continue;
 			if (lattice[cur_row][cur_col].occupant != NULL) {
 				if (lattice[cur_row][cur_col].occupant->type == lookFor) {
 					if(ret != NULL) {
