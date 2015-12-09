@@ -11,7 +11,6 @@ extern cell_t lattice[][LATTICE_WIDTH];
 extern list_t* entity_list;
 
 pair_t getOffset(direction_t direction);
-int isValidLatticeCell(int x, int y);
 
 void initEntity(entity_t* entity, int x, int y) {
 	entity->xpos = x;

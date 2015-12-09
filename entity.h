@@ -48,5 +48,6 @@ int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int
 int lookAround(entity_t entity, entity_type_t lookFor, int radius, entity_t** ret);
 direction_t opposite(direction_t direction);
 direction_t getDirection(entity_t from, entity_t to);
+int isValidLatticeCell(int x, int y);
 
 #endif

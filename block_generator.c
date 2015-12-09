@@ -83,6 +83,7 @@ void makeSimpleClosedBuildings(void) {
 
 	for (i = 0; i < lattice_height; i += tile_height) {
 		for (j = 0; j < lattice_width; j += tile_width) {
+			if (!isValidLatticeCell(i+SCALAR, j+SCALAR)) continue;
 			row = 0;
 			if (i > 0 && j > 0) {
 				while(check_down(tile, i, j) || check_left(tile, i, j)) {
@@ -105,6 +106,7 @@ void makeSimpleClosedBuildings(void) {
 				}
 				col = 0;
 				for (t_c = 0; t_c < tile_width; t_c++) {
+					if (!isValidLatticeCell(i+t_r, j+t_c)) continue;
 					if (t_c > 0 && t_c % SCALAR == 0) {
 						col++;
 					}
