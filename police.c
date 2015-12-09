@@ -1,5 +1,4 @@
 #include <stdlib.h>
-
 #include "police.h"
 #include "entity.h"
 
@@ -23,28 +22,47 @@ entity_t* policeCreate(int x, int y) {
 int policeAct(police_t* police) {
 	entity_t* zombie;
 	entity_t* civilian;
+	entity_t* neighbor;
+	entity_t* armed_civ;
+	int surrounded;
+	int i;
 	double coin;
 	coin = (double)rand() / (double)RAND_MAX;
+	surrounded = 1;
 
 	if (lookAhead(police->super, police->super.direction, type_zombie, 5, 5, &zombie)) {
 		if (coin <= ACCURACY) {
 			killEntity(zombie);
 		}
 		else {
-			if (lookAround(*zombie, type_civilian, 2, &civilian)) {
+			if (lookAround(*zombie, type_civilian, 3, &civilian)) {
 				killEntity(civilian);
 			}
 		}
 		move(&police->super, police->super.direction);
+	}
+	else if (lookAround(police->super, type_zombie, 8, &zombie)) {
+		police->super.direction = getDirection(police->super, *zombie);
 	}
 	else {
 		if (coin <= 0.25) {
 			police->super.direction = rand() % MAX_DIRECTIONS;
 		}
 		move(&police->super, police->super.direction);
-		
 	}
+	for (i = 0; i < MAX_DIRECTIONS; i++) {
+		neighbor = getNeighbor(&police->super, i);
+		if (neighbor == NULL || neighbor->type != type_civilian) {
+			surrounded = 0;
+		}
+	}
+	if (surrounded) {
+		neighbor = getNeighbor(&police->super, rand() % MAX_DIRECTIONS);
+		armed_civ = policeCreate(neighbor->xpos, neighbor->ypos);
+		killEntity(neighbor);
+		spawnEntity(armed_civ);
 
+	}
 	return 0;
 }
 

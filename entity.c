@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <math.h>
 #include "entity.h"
 #include "entity_list.h"
 #include "constants.h"
@@ -150,29 +151,69 @@ direction_t getDirection(entity_t from, entity_t to) {
 	}
 }
 
+int getDistance(entity_t from, entity_t to) {
+	double dx;
+	double dy;
+	double dist;
+	dx = to.xpos - from.xpos;
+	dy = to.ypos - from.ypos;
+	dist = dx*dx + dy*dy; // XXX if need exact distance sqrt this
+	return dist;
+}
+
+int lineOfSight(entity_t from, entity_t to) {
+	entity_t curpos;
+	pair_t direction;
+	curpos.xpos = from.xpos;
+	curpos.ypos = from.ypos;
+	while (curpos.xpos != to.xpos && curpos.ypos != to.ypos) {
+		direction = getOffset(getDirection(curpos, to));
+		curpos.xpos += direction.x;
+		curpos.ypos += direction.y;
+		if (lattice[curpos.xpos][curpos.ypos].type == type_barrier) {
+			if (lattice[curpos.xpos][curpos.ypos].occupant == NULL) {
+				return 0;
+			}
+		}
+	}
+	return 1;
+}
+
 int lookAround(entity_t entity, entity_type_t lookFor, int radius, entity_t** ret) {
 	pair_t start;
 	pair_t end;
 	int i;
 	int j;
+	int found;
+	double dist;
+	double best_dist;
+	found = 0;
+	best_dist = INFINITY;
 	start.x = entity.xpos - radius;
 	start.y = entity.ypos -  radius;
 	end.x = entity.xpos + radius;
 	end.y = entity.ypos + radius;
+	
 	for (i = start.x; i <= end.x; i++) {
 		for (j = start.y; j <= end.y; j++) {
 			if (!isValidLatticeCell(i, j)) continue;
 			if (lattice[i][j].occupant != NULL) {
 				if (lattice[i][j].occupant->type == lookFor) {
-					if (ret != NULL) {
+					if (!lineOfSight(entity, *lattice[i][j].occupant)) continue;
+					dist = getDistance(entity, *lattice[i][j].occupant);
+					if (ret != NULL && dist < best_dist) {
+						found = 1;
+						best_dist = dist;
 						*ret = lattice[i][j].occupant;
 					}
-					return 1;
+					else {
+						return 1;
+					}
 				}
 			}
 		}
 	}
-	return 0;
+	return found;
 }
 
 int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int fov, int range, entity_t** ret) {

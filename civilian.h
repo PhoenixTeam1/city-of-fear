@@ -5,6 +5,7 @@
 
 typedef struct civilian_t {
 	entity_t super;
+	double fear;
 } civilian_t;
 
 entity_t* civilianCreate(int x, int y);

@@ -55,7 +55,7 @@ int zombieAct(zombie_t* zombie) {
 		spawnEntity(new_zombie);
 		((zombie_t *)new_zombie)->feasting = FEAST_TIME;
 	}
-	if (lookAround(zombie->super, type_civilian, 4, &noise)) {
+	if (lookAround(zombie->super, type_civilian, 15, &noise)) {
 		zombie->super.direction = getDirection(zombie->super, *noise);
 		move(&zombie->super, zombie->super.direction);
 	}
