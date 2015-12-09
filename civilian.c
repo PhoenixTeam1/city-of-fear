@@ -21,8 +21,8 @@ entity_t* civilianCreate(int x, int y) {
 }
 
 int civilianAct(civilian_t* civilian) {
-	entity_t* police;
-	entity_t* zombie;
+	entity_t* police = NULL;
+	entity_t* zombie = NULL;
 	double coin;
 	int num_zombies;
 
@@ -40,7 +40,7 @@ int civilianAct(civilian_t* civilian) {
 	}
 	// Move
 	
-	if (coin <= civilian->fear) {
+	if (coin <= civilian->fear && police != NULL) {
 		civilian->super.direction = getDirection(civilian->super, *police);
 	}
 	else if (num_zombies) {
