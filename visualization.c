@@ -39,11 +39,12 @@ void renderBitmapString(float x, float y, void *font,char *string);
 void clickHandler(int button, int state, int x, int y);
 
 void clickHandler(int button, int state, int x, int y) {
-
+	x = x / VISUALIZATION_SCALAR;
+	y = lattice_height - ((y-VISUALIZATION_SCALAR*1)/VISUALIZATION_SCALAR);
 	switch (button) {
 		case GLUT_LEFT_BUTTON:
         		if (state == GLUT_UP) {
-				dropBomb(lattice_height-(y-1),x);
+				dropBomb(y,x);
 			}	
 			break;
 	}

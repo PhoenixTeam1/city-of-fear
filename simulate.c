@@ -65,14 +65,21 @@ void dropBomb(int x, int y) {
 	int i;
 	int j;
 	int radius = 15;
+	float d;
 	for (i = -radius; i <= radius; i++) {
 		for (j = -radius; j <= radius; j++) {
-			if (lattice[x+i][y+j].type == type_barrier) {
-				lattice[x+i][y+j].type = type_open;
-			}
-			if (lattice[x+i][y+j].occupant != NULL) {
-				killEntity(lattice[x+i][y+j].occupant);
-				//lattice[x+i][y+j].type = type_barrier;
+			d = ((float)j/(float)radius)*((float)j/(float)radius) +
+			    ((float)i/(float)radius)*((float)i/(float)radius);
+			if ((x+i) > lattice_height-1 || (x+i) < 0) continue;
+			if ((y+j) > lattice_width-1 || (y+j) < 0) continue;
+			if (d < 1.1) {
+				if (lattice[x+i][y+j].type == type_barrier) {
+					lattice[x+i][y+j].type = type_open;
+				}
+				if (lattice[x+i][y+j].occupant != NULL) {
+					killEntity(lattice[x+i][y+j].occupant);
+					//lattice[x+i][y+j].type = type_barrier;
+				}
 			}
 		}
 	}
