@@ -47,6 +47,16 @@ void clickHandler(int button, int state, int x, int y) {
 				dropBomb(y,x);
 			}	
 			break;
+		case GLUT_RIGHT_BUTTON:
+			if (state == GLUT_UP) {
+				infect(y,x);
+			}
+			break;
+		case GLUT_MIDDLE_BUTTON:
+			if (state == GLUT_UP) {
+				uninfect(y,x);
+			}
+			break;
 	}
 	return;
 }

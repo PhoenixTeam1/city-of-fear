@@ -6,6 +6,8 @@
 
 #include "constants.h"
 #include "civilian.h"
+#include "zombie.h"
+#include "police.h"
 #include "entity.h"
 #include "entity_list.h"
 #include "cell.h"
@@ -61,6 +63,72 @@ void dumbInteract(void) {
 	return;
 }
 
+
+void uninfect(int x, int y) {
+	int i;
+	int j;
+	int radius = 15;
+	float d;
+	entity_t* entity;
+	for (i = -radius; i <= radius; i++) {
+		for (j = -radius; j <= radius; j++) {
+			d = ((float)j/(float)radius)*((float)j/(float)radius) +
+			    ((float)i/(float)radius)*((float)i/(float)radius);
+			if ((x+i) > lattice_height-1 || (x+i) < 0) continue;
+			if ((y+j) > lattice_width-1 || (y+j) < 0) continue;
+			if (d < 1.1) {
+				if (lattice[x+i][y+j].occupant != NULL) {
+					entity = lattice[x+i][y+j].occupant;
+					if (entity->type == type_zombie) {
+						killEntity(entity);
+						dead_count--;
+						if (rand() % 2 == 0) {
+							entity = civilianCreate(x+i,y+j);
+						}
+						else {
+							entity = policeCreate(x+i,y+j);
+						}
+						spawnEntity(entity);
+					}
+				}
+			}
+		}
+	}
+	return;
+}
+
+
+void infect(int x, int y) {
+	int i;
+	int j;
+	int radius = 15;
+	float d;
+	entity_t* entity;
+	for (i = -radius; i <= radius; i++) {
+		for (j = -radius; j <= radius; j++) {
+			d = ((float)j/(float)radius)*((float)j/(float)radius) +
+			    ((float)i/(float)radius)*((float)i/(float)radius);
+			if ((x+i) > lattice_height-1 || (x+i) < 0) continue;
+			if ((y+j) > lattice_width-1 || (y+j) < 0) continue;
+			if (d < 1.1) {
+				if (lattice[x+i][y+j].occupant != NULL) {
+					entity = lattice[x+i][y+j].occupant;
+					if (entity->type == type_civilian) {
+						killEntity(entity);
+						entity = zombieCreate(x+i,y+j);
+						spawnEntity(entity);
+					}
+					else if (entity->type == type_police) {
+						killEntity(entity);
+						entity = zombieCreate(x+i,y+j);
+						spawnEntity(entity);
+					}
+				}
+			}
+		}
+	}
+	return;
+}
 void dropBomb(int x, int y) {
 	int i;
 	int j;
