@@ -49,7 +49,7 @@ void populateCity(void) {
 
 			// create linked list of entities
 			if (new_entity) {
-				list_add(entity_list, new_entity);
+				//list_add(entity_list, new_entity);
 				lattice[i][j].occupant = new_entity;
 				new_entity = NULL;
 			}

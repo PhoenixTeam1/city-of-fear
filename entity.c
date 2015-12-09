@@ -58,7 +58,7 @@ entity_t* getNeighbor(entity_t* entity, direction_t direction) {
 }
 
 void killEntity(entity_t* entity) {
-	list_remove(entity_list, entity->listnode);
+	//list_remove(entity_list, entity->listnode);
 	entity->die(entity);
 	lattice[entity->xpos][entity->ypos].occupant = NULL;
 	return;
@@ -67,7 +67,7 @@ void spawnEntity(entity_t* entity) {
 	// no spawning on top of others!
 	assert(lattice[entity->xpos][entity->ypos].occupant == NULL);
 	lattice[entity->xpos][entity->ypos].occupant = entity;
-	list_add(entity_list, entity);
+	//list_add(entity_list, entity);
 	return;
 }
 

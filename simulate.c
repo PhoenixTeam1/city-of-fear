@@ -57,7 +57,17 @@ int main() {
 }
 
 void dumbInteract(void) {
-	list_act(entity_list);
+	int i;
+	int j;
+	entity_t* entity;
+	for (i = 0; i < lattice_height; i++) {
+		for (j = 0; j < lattice_width; j++) {
+			if (lattice[i][j].occupant == NULL) continue;
+			entity = lattice[i][j].occupant;
+			entity->act(entity);
+		}
+	}
+	//list_act(entity_list);
 	return;
 }
 
