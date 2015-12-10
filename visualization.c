@@ -13,7 +13,7 @@
 #define VISUALIZATION_SCALAR 	2
 #define RGB_SIZE		3
 
-#define HUD_STR_LEN	32
+#define HUD_STR_LEN	128
 
 extern int lattice_height;
 extern int lattice_width;
