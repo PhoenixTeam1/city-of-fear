@@ -228,6 +228,7 @@ int lookAhead(entity_t entity, direction_t direction, entity_type_t lookFor, int
 			if (!isValidLatticeCell(cur_row, cur_col)) continue;
 			if (lattice[cur_row][cur_col].occupant != NULL) {
 				if (lattice[cur_row][cur_col].occupant->type == lookFor) {
+					if(!lineOfSight(entity, *lattice[cur_row][cur_col].occupant)) continue;
 					if(ret != NULL) {
 						*ret = lattice[cur_row][cur_col].occupant;
 					}

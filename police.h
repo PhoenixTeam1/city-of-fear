@@ -5,6 +5,7 @@
 
 typedef struct police_t {
 	entity_t super;
+	int level;
 	// police-specific members here
 	// ammunition?
 } police_t;
