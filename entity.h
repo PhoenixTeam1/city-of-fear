@@ -50,5 +50,6 @@ direction_t opposite(direction_t direction);
 direction_t getDirection(entity_t from, entity_t to);
 int isValidLatticeCell(int x, int y);
 pair_t getOffset(direction_t direction);
+int isOpen(int x, int y);
 
 #endif

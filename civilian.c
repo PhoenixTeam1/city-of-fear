@@ -4,6 +4,7 @@
 
 #include "civilian.h"
 #include "entity.h"
+#include "cell.h"
 
 #define ZOMBIE_FEAR 0.025
 #define POLIEC_FEAR -0.005
@@ -49,6 +50,7 @@ int civilianAct(civilian_t* civilian) {
 				child = getNeighbor(&civilian->super, i);
 				if (child == NULL && coin < BIRTH_RATE) {
 					if (isValidLatticeCell(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y)) {
+						if (!isOpen(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y)) continue;
 						child = civilianCreate(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y);
 						civilian_max++;
 						spawnEntity(child);

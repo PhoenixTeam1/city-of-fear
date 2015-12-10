@@ -80,6 +80,13 @@ int isValidLatticeCell(int x, int y) {
 	return 1;
 }
 
+int isOpen(int x, int y) {
+	if (lattice[x][y].type == type_open) {
+		return 1;
+	}
+	return 0;
+}
+
 direction_t opposite(direction_t direction) {
 	switch (direction) {
 		case north:
