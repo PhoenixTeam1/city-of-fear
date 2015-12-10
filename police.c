@@ -15,7 +15,7 @@ entity_t* policeCreate(int x, int y) {
 	police->super.act = (int (*)(entity_t*))policeAct;
 	police->super.die = (int (*)(entity_t*))policeDie;
 	police->super.direction = rand() % MAX_DIRECTIONS;
-	police->level = 0;
+	police->level = 1;
 	police_count++;
 	return &police->super;
 }
@@ -30,6 +30,7 @@ int policeAct(police_t* police) {
 	double coin;
 	coin = (double)rand() / (double)RAND_MAX;
 	surrounded = 1;
+	for (i = 0; i < police->level; i += 5) {
 	if (lookAhead(police->super, police->super.direction, type_zombie, police->level+5, police->level+5, &zombie)) {
 		if (coin <= ACCURACY) {
 			killEntity(zombie);
@@ -52,6 +53,7 @@ int policeAct(police_t* police) {
 			police->super.direction = rand() % MAX_DIRECTIONS;
 		}
 		move(&police->super, police->super.direction);
+	}
 	}
 	for (i = 0; i < MAX_DIRECTIONS; i++) {
 		neighbor = getNeighbor(&police->super, i);

@@ -2,7 +2,7 @@
 #include "entity.h"
 #include "zombie.h"
 
-#define FEAST_TIME 5
+#define FEAST_TIME 1
 #define WAIT_TIME 5
 
 extern int zombie_count;
