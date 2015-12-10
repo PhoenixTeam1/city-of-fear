@@ -111,7 +111,7 @@ void makeSimpleClosedBuildings(void) {
 						col++;
 					}
 					if (tileset[tile][row][col]) {
-						lattice[i+t_r][j+t_c].type = type_barrier;
+						lattice[i+t_r][j+t_c].type = type_open;
 					}
 					else {
 						lattice[i+t_r][j+t_c].type = type_open;

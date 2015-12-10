@@ -3,12 +3,16 @@
 #include <time.h>
 
 #include "civilian.h"
+#include "zombie.h"
+#include "police.h"
 #include "entity.h"
 #include "cell.h"
 
 #define ZOMBIE_FEAR 0.025
 #define POLIEC_FEAR -0.005
 #define BIRTH_RATE .001
+#define ZOMBIE_CHANCE 0.01
+#define POLICE_CHANCE 0.002
 
 extern int civilian_count;
 extern int civilian_max;
@@ -51,7 +55,20 @@ int civilianAct(civilian_t* civilian) {
 				if (child == NULL && coin < BIRTH_RATE) {
 					if (isValidLatticeCell(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y)) {
 						if (!isOpen(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y)) continue;
-						child = civilianCreate(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y);
+						coin = (double) rand() / RAND_MAX;
+						if (coin < ZOMBIE_CHANCE) {
+							child = zombieCreate(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y);
+							
+						}
+						else {
+							coin = (double) rand() / RAND_MAX;
+							if (coin < POLICE_CHANCE) {
+								child = policeCreate(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y);
+							}
+							else {
+								child = civilianCreate(civilian->super.xpos + getOffset(i).x, civilian->super.ypos + getOffset(i).y);
+							}
+						}
 						civilian_max++;
 						spawnEntity(child);
 					}
@@ -61,7 +78,7 @@ int civilianAct(civilian_t* civilian) {
 	}
 	coin = (double) rand() / RAND_MAX;
 	// Police calm us
-	if (lookAround(civilian->super, type_police, 8, &police)) { 
+	if (lookAround(civilian->super, type_police, 30, &police)) { 
 		civilian->fear -= 0.005;
 		if (civilian->fear < 0) civilian->fear = 0;
 	}

@@ -3,6 +3,6 @@
 
 #define LATTICE_WIDTH		816
 #define LATTICE_HEIGHT		456
-#define SLEEP_TIME		100000
+#define SLEEP_TIME		1000
 
 #endif

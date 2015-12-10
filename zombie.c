@@ -2,7 +2,7 @@
 #include "entity.h"
 #include "zombie.h"
 
-#define FEAST_TIME 10
+#define FEAST_TIME 5
 #define WAIT_TIME 5
 
 extern int zombie_count;
@@ -35,12 +35,12 @@ int zombieAct(zombie_t* zombie) {
 		killEntity(&zombie->super);
 		return 0;
 	}
-	if (lookAhead(zombie->super, zombie->super.direction, type_civilian, 0, 10, NULL)) {
+	if (lookAhead(zombie->super, zombie->super.direction, type_civilian, 0, 20, NULL)) {
 		move(&zombie->super, zombie->super.direction);
 		move(&zombie->super, zombie->super.direction);
 		move(&zombie->super, zombie->super.direction);
 	}
-	else if(lookAhead(zombie->super, zombie->super.direction, type_police, 0, 10, NULL)) {
+	else if(lookAhead(zombie->super, zombie->super.direction, type_police, 0, 20, NULL)) {
 		move(&zombie->super, zombie->super.direction);
 		move(&zombie->super, zombie->super.direction);
 		move(&zombie->super, zombie->super.direction);

@@ -34,8 +34,8 @@ int policeAct(police_t* police) {
 		if (coin <= ACCURACY) {
 			killEntity(zombie);
 			police->level++;
-			if (police->level > 100) {
-				police->level = 100;
+			if (police->level > 20) {
+				police->level = 20;
 			}
 		}
 		else {
