@@ -7,6 +7,7 @@ typedef struct zombie_t {
 	entity_t super;
 	int feasting;
 	int hibernating;
+	int energy;
 	// zombie-specific members here
 } zombie_t;
 

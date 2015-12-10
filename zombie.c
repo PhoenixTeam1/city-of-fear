@@ -17,6 +17,7 @@ entity_t* zombieCreate(int x, int y) {
 	zombie->super.direction = rand() % MAX_DIRECTIONS;
 	zombie->feasting = 0;
 	zombie->hibernating = 0;
+	zombie->energy = 100;
 	zombie_count++;
 	return &zombie->super;
 }
@@ -30,7 +31,10 @@ int zombieAct(zombie_t* zombie) {
 	if (zombie->feasting) {
 		zombie->feasting--; return 0;
 	}
-
+	if (!zombie->energy--) {
+		killEntity(&zombie->super);
+		return 0;
+	}
 	if (lookAhead(zombie->super, zombie->super.direction, type_civilian, 0, 10, NULL)) {
 		move(&zombie->super, zombie->super.direction);
 		move(&zombie->super, zombie->super.direction);
@@ -50,6 +54,7 @@ int zombieAct(zombie_t* zombie) {
 	neighbor = getNeighbor(&zombie->super, zombie->super.direction);
 	if (neighbor != NULL && (neighbor->type == type_civilian || neighbor->type == type_police)) {
 		zombie->feasting = FEAST_TIME;
+		zombie->energy = 100;
 		new_zombie = zombieCreate(neighbor->xpos, neighbor->ypos);
 		killEntity(neighbor);
 		spawnEntity(new_zombie);
